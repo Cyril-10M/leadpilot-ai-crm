@@ -148,7 +148,7 @@ with tab1:
                 st.write(f"**Deal:** ${r['deal_value'] or 0:,.0f}")
                 st.write(f"**Timeline:** {r['timeline']}")
                 st.write(f"**Source:** {r['source']}")
-                        if st.button("✏️ Edit lead", key=f"edit{r['id']}"):
+        if st.button("📝 Edit lead", key=f"edit{r['id']}"):
             st.session_state[f"editing{r['id']}"] = not st.session_state.get(f"editing{r['id']}", False)
 
         if st.session_state.get(f"editing{r['id']}", False):
@@ -166,8 +166,8 @@ with tab1:
                     c = conn()
                     c.execute(
                         """UPDATE leads
-                        SET name=?, company=?, email=?, job_title=?, deal_value=?, pain_point=?
-                        WHERE id=?""",
+                           SET name=?, company=?, email=?, job_title=?, deal_value=?, pain_point=?
+                           WHERE id=?""",
                         (edit_name, edit_company, edit_email, edit_job, edit_deal, edit_pain, r["id"])
                     )
                     c.commit()
