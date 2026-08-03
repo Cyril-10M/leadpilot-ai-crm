@@ -175,5 +175,5 @@ with tab1:
                     st.session_state[f"editing{r['id']}"] = False
                     st.success("Lead updated successfully!")
                     st.rerun()
-                if st.button("🗑️ Delete lead", key=f"d{r['id']}"):
-                    c=conn(); c.execute("DELETE FROM leads WHERE id=?",(r["id"],)); c.commit(); st.rerun()
+        if st.button("🗑️ Delete lead", key=f"delete_bottom_{r['id']}"):
+            c=conn(); c.execute("DELETE FROM leads WHERE id=?",(r["id"],)); c.commit(); st.rerun()
