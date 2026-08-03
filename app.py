@@ -148,5 +148,32 @@ with tab1:
                 st.write(f"**Deal:** ${r['deal_value'] or 0:,.0f}")
                 st.write(f"**Timeline:** {r['timeline']}")
                 st.write(f"**Source:** {r['source']}")
+                        if st.button("✏️ Edit lead", key=f"edit{r['id']}"):
+            st.session_state[f"editing{r['id']}"] = not st.session_state.get(f"editing{r['id']}", False)
+
+        if st.session_state.get(f"editing{r['id']}", False):
+            with st.form(key=f"editform{r['id']}"):
+                edit_name = st.text_input("Contact name", value=r["name"])
+                edit_company = st.text_input("Company", value=r["company"])
+                edit_email = st.text_input("Email", value=r["email"] or "")
+                edit_job = st.text_input("Job title", value=r["job_title"] or "")
+                edit_deal = st.number_input("Estimated deal value ($)", min_value=0.0, value=float(r["deal_value"] or 0))
+                edit_pain = st.text_area("Pain point / requirement", value=r["pain_point"] or "")
+
+                save_edit = st.form_submit_button("💾 Save changes")
+
+                if save_edit:
+                    c = conn()
+                    c.execute(
+                        """UPDATE leads
+                        SET name=?, company=?, email=?, job_title=?, deal_value=?, pain_point=?
+                        WHERE id=?""",
+                        (edit_name, edit_company, edit_email, edit_job, edit_deal, edit_pain, r["id"])
+                    )
+                    c.commit()
+                    c.close()
+                    st.session_state[f"editing{r['id']}"] = False
+                    st.success("Lead updated successfully!")
+                    st.rerun()
                 if st.button("🗑️ Delete lead", key=f"d{r['id']}"):
                     c=conn(); c.execute("DELETE FROM leads WHERE id=?",(r["id"],)); c.commit(); st.rerun()
